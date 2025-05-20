@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government Department Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0056b3;
+            --secondary: #003366;
+            --accent: #1e88e5;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: linear-gradient(to bottom, var(--secondary), var(--primary));
+            color: white;
+            padding: 1.5rem;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo img {
+            width: 40px;
+            margin-right: 10px;
+        }
+
+        .logo h2 {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            color: var(--secondary);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+
+        /* Filters */
+        .filters {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1rem;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--secondary);
+        }
+
+        .filter-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(0, 86, 179, 0.1);
+        }
+
+        /* Petitions Table */
+        .petitions-table {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: var(--light);
+            font-weight: 500;
+            color: var(--secondary);
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background: rgba(0, 86, 179, 0.03);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-received {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-verified {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .status-completed {
+            background: #f1f8e9;
+            color: #689f38;
+        }
+
+        .urgency-high {
+            color: var(--danger);
+            font-weight: 500;
+        }
+
+        .urgency-medium {
+            color: var(--warning);
+            font-weight: 500;
+        }
+
+        .urgency-low {
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .action-btn {
+            padding: 0.5rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: var(--primary);
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            color: var(--secondary);
+            transform: scale(1.1);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: var(--secondary);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Alert messages */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: #e8f5e9;
+            color: #388e3c;
+            border-left: 4px solid #388e3c;
+        }
+
+        .alert-error {
+            background-color: #ffebee;
+            color: #d32f2f;
+            border-left: 4px solid #d32f2f;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            .filter-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .filter-row {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="./logos/gov.gif" alt="Government Logo">
+                <h2>Gov Petition System</h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-inbox"></i>
+                        Petitions
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-chart-bar"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1>Petition Management</h1>
+                <div class="user-profile">
+                    <img src="./logos/person.gif" alt="User Profile">
+                    <span id="officer-name">Loading...</span>
+                </div>
+            </div>
+
+            <!-- Alert messages -->
+            <div class="alert alert-success" id="successAlert" style="display: none;"></div>
+            <div class="alert alert-error" id="errorAlert" style="display: none;"></div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="department">Department</label>
+                        <select id="department" class="filter-control">
+                            <option value="All Departments">All Departments</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Water Supply">Water Supply</option>
+                            <option value="Electricity">Electricity</option>
+                            <option value="Sanitation">Sanitation</option>
+                            <option value="Health">Health</option>
+                            <option value="Education">Education</option>
+                            <option value="Housing">Housing</option>
+                            <option value="Public Safety">Public Safety</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="status">Status</label>
+                        <select id="status" class="filter-control">
+                            <option value="">All Statuses</option>
+                            <option value="received">Received</option>
+                            <option value="verified">Verified</option>
+                            <option value="in-progress">In progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="urgency">Urgency</label>
+                        <select id="urgency" class="filter-control">
+                            <option value="">All Urgency</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="date-from">Date From</label>
+                        <input type="date" id="date-from" class="filter-control">
+                    </div>
+                    <div class="filter-group">
+                        <label for="date-to">Date To</label>
+                        <input type="date" id="date-to" class="filter-control">
+                    </div>
+                    <div class="filter-group">
+                        <label for="search">Search</label>
+                        <input type="text" id="search" class="filter-control" placeholder="Search petitions...">
+                    </div>
+                </div>
+                <button id="apply-filters" class="btn">Apply Filters</button>
+                <button id="reset-filters" class="btn btn-outline">Reset</button>
+            </div>
+
+            <!-- Petitions Table -->
+            <div class="petitions-table">
+                <div class="spinner" id="tableSpinner">
+                    <img src="./logos/loading-spinner.gif" alt="Loading...">
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Sender</th>
+                            <th>Department</th>
+                            <th>Urgency</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="petitions-list">
+                        <!-- Will be populated by JavaScript -->
+                    </tbody>
+                </table>
+                <div id="pagination" style="padding: 1rem; text-align: center; display: none;">
+                    <button id="prevPage" class="btn btn-outline" disabled>Previous</button>
+                    <span id="pageInfo" style="margin: 0 1rem;">Page 1 of 1</span>
+                    <button id="nextPage" class="btn btn-outline" disabled>Next</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- View Petition Modal -->
+    <div class="modal" id="viewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Petition Details</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Tracking ID</label>
+                    <p id="modal-id">Loading...</p>
+                </div>
+                <div class="form-group">
+                    <label>Date Submitted</label>
+                    <p id="modal-date">Loading...</p>
+                </div>
+                <div class="form-group">
+                    <label>Sender Email</label>
+                    <p id="modal-email">Loading...</p>
+                </div>
+                <div class="form-group">
+                    <label>Department</label>
+                    <p id="modal-dept">Loading...</p>
+                </div>
+                <div class="form-group">
+                    <label>Urgency</label>
+                    <p id="modal-urgency">Loading...</p>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <p id="modal-status">Loading...</p>
+                </div>
+                <div class="form-group">
+                    <label>Petition Content</label>
+                    <div class="form-control" id="modal-content"
+                        style="height: auto; background: #f8f9fa; padding: 1rem; border-radius: 5px;">
+                        Loading...
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline modal-close-btn">Close</button>
+                <button class="btn" id="verifyPetitionBtn">Verify Petition</button>
+            </div>
+        </div>
+    </div>
+<!-- Reply Model -->
+    <div class="modal" id="replyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Reply to Petition</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>To</label>
+                    <p id="reply-email">Loading...</p>
+                </div>
+                <div class="form-group">
+                    <label>Subject</label>
+                    <input type="text" class="form-control" id="reply-subject" placeholder="Subject">
+                </div>
+                <div class="form-group">
+                    <label>Status Update</label>
+                    <select class="form-control" id="status-update">
+                        <option value="verified">Verified (Default)</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Your Reply</label>
+                    <textarea class="form-control" id="reply-message"
+                        placeholder="Type your official response here..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline modal-close-btn">Cancel</button>
+                <button class="btn" id="send-reply-btn">Send Response</button>
+                <div class="spinner" id="replySpinner" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentPage = 1;
+        let totalPages = 1;
+        let currentPetitionId = null;
+        let officerData = null;
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function () {
+            checkSession();
+            setupEventListeners();
+        });
+
+        // Check if user is logged in and load data
+        function checkSession() {
+            fetch('/api/check-session')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Session check failed');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error || !data.officer_id) {
+                        window.location.href = '/login.html';
+                    } else {
+                        officerData = data;
+                        document.getElementById('officer-name').textContent = data.name;
+                        loadPetitions();
+                    }
+                })
+                .catch(error => {
+                    window.location.href = '/login.html';
+                });
+        }
+
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Logout button
+            document.querySelector('.logout-btn').addEventListener('click', function () {
+                fetch('/api/logout')
+                    .then(() => {
+                        window.location.href = '/login.html';
+                    });
+            });
+
+            // Filter buttons
+            document.getElementById('apply-filters').addEventListener('click', function () {
+                currentPage = 1;
+                loadPetitions();
+            });
+
+            document.getElementById('reset-filters').addEventListener('click', function () {
+                document.getElementById('department').value = '';
+                document.getElementById('status').value = '';
+                document.getElementById('urgency').value = '';
+                document.getElementById('date-from').value = '';
+                document.getElementById('date-to').value = '';
+                document.getElementById('search').value = '';
+                currentPage = 1;
+                loadPetitions();
+            });
+
+            // Pagination buttons
+            document.getElementById('prevPage').addEventListener('click', function () {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadPetitions();
+                }
+            });
+
+            document.getElementById('nextPage').addEventListener('click', function () {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadPetitions();
+                }
+            });
+
+            // Modal close buttons
+            document.querySelectorAll('.modal-close, .modal-close-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    document.getElementById('viewModal').style.display = 'none';
+                    document.getElementById('replyModal').style.display = 'none';
+                });
+            });
+
+            // Verify petition button
+            document.getElementById('verifyPetitionBtn').addEventListener('click', verifyPetition);
+
+            // Send reply button
+            document.getElementById('send-reply-btn').addEventListener('click', sendReply);
+        }
+
+        // Load petitions with current filters
+        function loadPetitions() {
+            const department = document.getElementById('department').value;
+            const status = document.getElementById('status').value;
+            const urgency = document.getElementById('urgency').value;
+            const dateFrom = document.getElementById('date-from').value;
+            const dateTo = document.getElementById('date-to').value;
+            const search = document.getElementById('search').value;
+
+            // Show loading spinner
+            document.getElementById('tableSpinner').style.display = 'block';
+            document.getElementById('petitions-list').innerHTML = '';
+
+            // Build query parameters
+            let params = new URLSearchParams();
+             // Only show petitions for officer's department
+            //params.append('department', officerData.department);
+            params.append('department', department);
+            if (status) params.append('status', status);
+            if (urgency) params.append('urgency', urgency);
+            if (dateFrom) params.append('date_from', dateFrom);
+            if (dateTo) params.append('date_to', dateTo);
+            if (search) params.append('search', search);
+            params.append('page', currentPage);
+
+            fetch(`/api/department/petitions?${params.toString()}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+
+                    // Update pagination
+                    totalPages = data.total_pages || 1;
+                    updatePagination();
+
+                    // Populate table
+                    const petitionsList = document.getElementById('petitions-list');
+                    petitionsList.innerHTML = '';
+
+                    if (data.petitions && data.petitions.length > 0) {
+                        data.petitions.forEach(petition => {
+                            const row = document.createElement('tr');
+                            row.dataset.id = petition.tracking_token;
+                            console.log(petition.tracking_token);
+
+                            // Set urgency class
+                            let urgencyClass = '';
+                            if (petition.urgency === 'high') urgencyClass = 'urgency-high';
+                            else if (petition.urgency === 'medium') urgencyClass = 'urgency-medium';
+                            else if (petition.urgency === 'low') urgencyClass = 'urgency-low';
+
+                            // Set status badge
+                            let statusBadge = '';
+                            if (petition.status === 'received') {
+                                statusBadge = '<span class="status-badge status-received">Received</span>';
+                            } else if (petition.status === 'verified') {
+                                statusBadge = '<span class="status-badge status-verified">Verified</span>';
+                            } else if (petition.status === 'in-progress') {
+                                statusBadge = '<span class="status-badge status-verified">In Progress</span>';
+                            } else if (petition.status === 'completed') {
+                                statusBadge = '<span class="status-badge status-completed">Completed</span>';
+                            }
+
+                            // Set action buttons
+                            let actionButtons = '';
+                            if (petition.status === 'received') {
+                                actionButtons = `
+                                <button class="action-btn view-btn" title="View" data-id="${petition.tracking_token}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn verify-btn" title="Verify" data-id="${petition.tracking_token}">
+                                    <i class="fas fa-check-circle"></i>
+                                </button>
+                            `;
+                            } else {
+                                actionButtons = `
+                                <button class="action-btn view-btn" title="View" data-id="${petition.tracking_token}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="action-btn reply-btn" title="Reply" data-id="${petition.tracking_token}">
+                                    <i class="fas fa-reply"></i>
+                                </button>
+                            `;
+                            }
+
+                            row.innerHTML = `
+                            <td>${petition.tracking_token}</td>
+                            <td>${petition.created_at}</td>
+                            <td>${petition.sender_email}</td>
+                            <td>${petition.department}</td>
+                            <td class="${urgencyClass}">${petition.urgency}</td>
+                            <td>${statusBadge}</td>
+                            <td>${actionButtons}</td>
+                        `;
+                            petitionsList.appendChild(row);
+                        });
+
+                        // Add event listeners to action buttons
+                        // Add event listeners to action buttons
+                        document.querySelectorAll('.view-btn').forEach(btn => {
+                            btn.addEventListener('click', function () {
+                                currentPetitionId = this.dataset.id;
+                                console.log("Viewing petition:", currentPetitionId);
+                                showPetitionDetails(currentPetitionId);
+                            });
+                        });
+
+                        document.querySelectorAll('.verify-btn').forEach(btn => {
+                            btn.addEventListener('click', function () {
+                                currentPetitionId = this.dataset.id;
+                                console.log("Verifying petition:", currentPetitionId);
+                                showPetitionDetails(currentPetitionId);
+                            });
+                        });
+
+                        document.querySelectorAll('.reply-btn').forEach(btn => {
+                            btn.addEventListener('click', function () {
+                                currentPetitionId = this.dataset.id;
+                                console.log("Replying to petition:", currentPetitionId);
+                                showReplyModal(currentPetitionId);
+                            });
+                        });
+                    } else {
+                        petitionsList.innerHTML = `
+                        <tr>
+                            <td colspan="7" style="text-align: center;">No petitions found</td>
+                        </tr>
+                    `;
+                    }
+                })
+                .catch(error => {
+                    showError(error.message);
+                })
+                .finally(() => {
+                    document.getElementById('tableSpinner').style.display = 'none';
+                });
+        }
+
+        // Update pagination controls
+        function updatePagination() {
+            const pagination = document.getElementById('pagination');
+            const prevBtn = document.getElementById('prevPage');
+            const nextBtn = document.getElementById('nextPage');
+            const pageInfo = document.getElementById('pageInfo');
+
+            if (totalPages > 1) {
+                pagination.style.display = 'block';
+                prevBtn.disabled = currentPage === 1;
+                nextBtn.disabled = currentPage === totalPages;
+                pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            } else {
+                pagination.style.display = 'none';
+            }
+        }
+
+        // Show petition details in modal
+        function showPetitionDetails(petitionId) {
+            fetch(`/api/track-petition`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tracking_token: petitionId
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+
+                    // Populate modal
+                    document.getElementById('modal-id').textContent = data.tracking_token;
+                    document.getElementById('modal-date').textContent = data.created_at;
+                    document.getElementById('modal-email').textContent = data.sender_email;
+                    document.getElementById('modal-dept').textContent = data.department;
+                    document.getElementById('modal-urgency').textContent = data.urgency;
+                    document.getElementById('modal-content').textContent = data.content;
+
+                    // Set status badge
+                    let statusBadge = '';
+                    if (data.status === 'unverified' || data.status === 'received') {
+                        statusBadge = '<span class="status-badge status-received">Received</span>';
+                        document.getElementById('verifyPetitionBtn').style.display = 'block';
+                    } else if (data.status === 'verified') {
+                        statusBadge = '<span class="status-badge status-verified">Verified</span>';
+                        document.getElementById('verifyPetitionBtn').style.display = 'none';
+                    }  else if (data.status === 'in-progress') {
+                        statusBadge = '<span class="status-badge status-verified">In Progress</span>';
+                        document.getElementById('verifyPetitionBtn').style.display = 'none';
+                    } else if (data.status === 'completed') {
+                        statusBadge = '<span class="status-badge status-verified">Completed</span>';
+                        document.getElementById('verifyPetitionBtn').style.display = 'none';
+                    }
+                    document.getElementById('modal-status').innerHTML = statusBadge;
+
+                    // Show modal
+                    document.getElementById('viewModal').style.display = 'flex';
+                })
+                .catch(error => {
+                    showError(error.message);
+                });
+        }
+
+        // Verify a petition
+        function verifyPetition() {
+            if (!currentPetitionId) return;
+
+            fetch('/api/verify-petition', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tracking_token: currentPetitionId
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+
+                    showSuccess('Petition verified successfully');
+                    document.getElementById('viewModal').style.display = 'none';
+                    loadPetitions(); // Refresh the list
+                })
+                .catch(error => {
+                    showError(error.message);
+                });
+        }
+
+        // Show reply modal
+        function showReplyModal(petitionId) {
+            fetch(`/api/track-petition`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tracking_token: petitionId
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+
+                    // Populate modal
+                    document.getElementById('reply-email').textContent = data.sender_email;
+                    document.getElementById('reply-subject').value = `Reg: Your Petition ${data.tracking_token}`;
+                    document.getElementById('reply-message').value = '';
+
+                    // Show modal
+                    document.getElementById('replyModal').style.display = 'flex';
+                })
+                .catch(error => {
+                    showError(error.message);
+                });
+        }
+
+        // Send reply to petition
+        // Modify your sendReply function to include status update
+        function sendReply() {
+            const email = document.getElementById('reply-email').textContent;
+            const subject = document.getElementById('reply-subject').value;
+            const message = document.getElementById('reply-message').value;
+            const newStatus = document.getElementById('status-update').value;
+            if (!message) {
+                showError('Please enter a reply message');
+                return;
+            }
+            document.getElementById('replySpinner').style.display = 'block';
+            document.getElementById('send-reply-btn').disabled = true;
+            fetch('/api/send-reply', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tracking_token: currentPetitionId,
+                    recipient: email,
+                    subject: subject,
+                    message: message,
+                    new_status: newStatus  // Include the new status
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    showSuccess('Reply sent and status updated successfully');
+                    document.getElementById('replyModal').style.display = 'none';
+                    loadPetitions(); // Refresh the petitions list
+                })
+                .catch(error => {
+                    showError(error.message);
+                })
+                .finally(() => {
+                    document.getElementById('replySpinner').style.display = 'none';
+                    document.getElementById('send-reply-btn').disabled = false;
+                });
+        }
+        
+        // Show success message
+        function showSuccess(message) {
+            const alert = document.getElementById('successAlert');
+            alert.textContent = message;
+            alert.style.display = 'block';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+
+        // Show error message
+        function showError(message) {
+            const alert = document.getElementById('errorAlert');
+            alert.textContent = message;
+            alert.style.display = 'block';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+
+        // Close modals when clicking outside
+        window.addEventListener('click', function (event) {
+            if (event.target === document.getElementById('viewModal')) {
+                document.getElementById('viewModal').style.display = 'none';
+            }
+            if (event.target === document.getElementById('replyModal')) {
+                document.getElementById('replyModal').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>

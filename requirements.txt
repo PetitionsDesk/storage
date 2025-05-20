@@ -1,0 +1,7 @@
+google-generativeai
+python-dotenv
+pandas
+Flask
+flask-cors
+pymongo
+requests

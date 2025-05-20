@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government Petition System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0d4b6e;
+            --secondary: #0a3a5a;
+            --accent: #1a73e8;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #34a853;
+            --danger: #ea4335;
+            --warning: #f9ab00;
+            --info: #4285f4;
+            --govt-gold: #ffc72c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e6f0f5 0%, #c9e3f0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: var(--dark);
+        }
+
+        .card-container {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 800px;
+            height: 600px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.6s ease;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        .header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .govt-logo {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            width: 50px;
+            height: 50px;
+            background-color: rgb(157, 225, 230);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .form-container {
+            padding: 2rem;
+            height: calc(100% - 90px);
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tracking-result {
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .status-received {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-verified {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .status-completed {
+            background-color: #f1f8e9;
+            color: #689f38;
+        }
+
+        .progress-container {
+            margin: 2rem 0;
+        }
+
+        .progress-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            width: 0;
+            transition: width 0.6s ease;
+        }
+
+        .step {
+            display: flex;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background-color: #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: 600;
+            color: #757575;
+            flex-shrink: 0;
+        }
+
+        .step.active .step-number {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .step-content {
+            flex-grow: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .step-description {
+            color: #757575;
+            font-size: 0.9rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background-color: #e8f5e9;
+            color: #388e3c;
+            border-left: 4px solid #388e3c;
+        }
+
+        .alert-danger {
+            background-color: #ffebee;
+            color: #d32f2f;
+            border-left: 4px solid #d32f2f;
+        }
+
+        .confirmation-gif {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .confirmation-gif img {
+            max-width: 200px;
+            border-radius: 8px;
+        }
+
+        .flip-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .flip-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .card-container {
+                height: auto;
+            }
+
+            .card {
+                height: auto;
+                min-height: 600px;
+            }
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Government seal animation */
+        .seal {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            background-color: var(--govt-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary);
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+            /* Add this to your existing CSS */
+        .steps-container {
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .steps-connector {
+            position: absolute;
+            left: 15px; /* Half of step-number width */
+            top: 30px; /* Height of first step-number */
+            bottom: 0;
+            width: 2px;
+            background-color: #e0e0e0;
+            z-index: 1;
+        }
+
+        .step {
+            display: flex;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2; /* Make sure steps appear above the connector */
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background-color: #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: 600;
+            color: #757575;
+            flex-shrink: 0;
+        }
+
+        .step.active .step-number {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background-color: var(--success);
+            color: white;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card-container">
+        <div class="card" id="card">
+            <!-- Front side - Petition Submission -->
+            <div class="card-face card-front">
+                <div class="header">
+                    <div class="govt-logo">
+                        <img src="./logos/gov.gif" style="height: 50px; width: 50px;"/>
+                    </div>
+                    <h1>Government Petition System</h1>
+                    <p>Submit your concerns to the authorities</p>
+                    <button class="flip-btn" onclick="flipCard()">⇄</button>
+                </div>
+
+                <div class="form-container">
+                    <div class="alert alert-success" id="successAlert" style="display: none;">
+                        Your petition has been submitted successfully! Check your email for confirmation.
+                        <img src="./logos/email.gif" alt="mail">
+                    </div>
+
+                    <div class="alert alert-danger" id="errorAlert" style="display: none;">
+                        There was an error submitting your petition. Please try again.
+                    </div>
+
+                    <form id="petitionForm">
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" class="form-control" id="email" required
+                                placeholder="Enter your official email address">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="petition">Your Petition</label>
+                            <textarea class="form-control" id="petition" required
+                                placeholder="Describe your concern in detail..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-block" id="submitBtn">
+                            Submit Petition
+                        </button>
+                        <div class="spinner" id="submitSpinner"></div>
+                    </form>
+
+                    <div id="confirmationSection" style="display: none;">
+                        <div class="confirmation-gif">
+                            <div class="seal">✓</div>
+                            <h3>Petition Submitted Successfully!</h3>
+                            <p>We've sent a confirmation email with your tracking details.</p>
+                            <img src="./logos/email.gif"
+                                alt="Confirmation GIF">
+                            <p>Your tracking token: <strong id="displayToken"></strong></p>
+                            <button class="btn btn-outline" onclick="flipCard()">Track Petition Status</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Back side - Petition Tracking -->
+            <div class="card-face card-back">
+                <div class="header">
+                    <div class="govt-logo">
+                        <img src="./logos/gov.gif" alt="Loading..." style="height: 50px; width: 50px;">
+                    </div>
+                    <h1>Petition Tracking</h1>
+                    <p>Check the status of your submission</p>
+                    <button class="flip-btn" onclick="flipCard()">⇄</button>
+                </div>
+
+                <div class="form-container">
+                    <div class="form-group">
+                        <label for="trackingTokenBack">Enter Tracking Token</label>
+                        <input type="text" class="form-control" id="trackingTokenBack"
+                            placeholder="Enter the token you received via email">
+                    </div>
+
+                    <button class="btn btn-block" id="trackBtn">
+                        Track Petition
+                    </button>
+                    <div class="spinner" id="trackSpinner"></div>
+
+                    <div id="statusGif" style="display: none; text-align: center; margin: 2rem 0;">
+                        <img id="statusGifImage" src="" alt="Status GIF" style="max-width: 200px; border-radius: 8px;">
+                    </div>
+
+                    <div class="tracking-result" id="trackingResult" style="display: none;">
+                        <div class="progress-container">
+                            <div class="progress-title">
+                                <span>Petition Progress</span>
+                                <span id="statusText">Received</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress" id="progressBar"></div>
+                            </div>
+                        </div>
+                    
+                        <div class="steps-container">
+                            <div class="steps-connector"></div> <!-- This is the connecting line -->
+                    
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <div class="step-title">Petition Received</div>
+                                    <div class="step-description">We've received your petition and are reviewing it.</div>
+                                </div>
+                            </div>
+                    
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <div class="step-title">Under Review</div>
+                                    <div class="step-description">The relevant department is reviewing your petition.</div>
+                                </div>
+                            </div>
+                    
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <div class="step-title">Action Taken</div>
+                                    <div class="step-description">Appropriate action is being taken on your petition.</div>
+                                </div>
+                            </div>
+                    
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <div class="step-title">Completed</div>
+                                    <div class="step-description">Your petition has been resolved.</div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div style="margin-top: 2rem;">
+                            <p><strong>Department:</strong> <span id="departmentText"></span></p>
+                            <p><strong>Urgency:</strong> <span id="urgencyText"></span></p>
+                            <p><strong>Submitted On:</strong> <span id="dateText"></span></p>
+                            <p><strong>Content:</strong> <span id="contentText"></span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function flipCard() {
+            document.getElementById('card').classList.toggle('flipped');
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const petitionForm = document.getElementById('petitionForm');
+            const successAlert = document.getElementById('successAlert');
+            const errorAlert = document.getElementById('errorAlert');
+            const submitBtn = document.getElementById('submitBtn');
+            const submitSpinner = document.getElementById('submitSpinner');
+            const confirmationSection = document.getElementById('confirmationSection');
+            const trackBtn = document.getElementById('trackBtn');
+            const trackSpinner = document.getElementById('trackSpinner');
+            const trackingResult = document.getElementById('trackingResult');
+            const progressBar = document.getElementById('progressBar');
+            const statusGif = document.getElementById('statusGif');
+            const steps = document.querySelectorAll('.step');
+
+            // Handle form submission
+            petitionForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const email = document.getElementById('email').value;
+                const petition = document.getElementById('petition').value;
+
+                submitBtn.style.display = 'none';
+                submitSpinner.style.display = 'block';
+                successAlert.style.display = 'none';
+                errorAlert.style.display = 'none';
+
+                fetch('/api/submit-petition', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        sender_email: email,
+                        content: petition
+                    }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            throw new Error(data.error);
+                        }
+
+                        // Show confirmation
+                        document.getElementById('displayToken').textContent = data.tracking_token+'\n'+data.formal_letter;
+                        petitionForm.style.display = 'none';
+                        confirmationSection.style.display = 'block';
+
+                        // Reset form
+                        petitionForm.reset();
+                    })
+                    .catch(error => {
+                        errorAlert.textContent = error.message || 'There was an error submitting your petition.';
+                        errorAlert.style.display = 'block';
+                    })
+                    .finally(() => {
+                        submitBtn.style.display = 'block';
+                        submitSpinner.style.display = 'none';
+                    });
+            });
+
+            // Handle tracking
+            trackBtn.addEventListener('click', function () {
+                const trackingToken = document.getElementById('trackingTokenBack').value.trim();
+
+                if (!trackingToken) {
+                    alert('Please enter your tracking token');
+                    return;
+                }
+
+                trackBtn.style.display = 'none';
+                trackSpinner.style.display = 'block';
+                trackingResult.style.display = 'none';
+                statusGif.style.display = 'none';
+
+                fetch('/api/track-petition', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        tracking_token: trackingToken
+                    }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            throw new Error(data.error);
+                        }
+
+                        // Update tracking result
+                        document.getElementById('statusText').textContent = data.status;
+                        document.getElementById('departmentText').textContent = data.department;
+                        document.getElementById('urgencyText').textContent = data.urgency;
+                        document.getElementById('dateText').textContent = data.created_at;
+                        document.getElementById('contentText').textContent = data.content;
+
+                        // Update progress and GIF based on status
+                        let progress = 0;
+                        let gifUrl = '';
+
+                        if (data.status === 'received') {
+                            progress = 25;
+                            updateSteps(1);
+                            gifUrl = './logos/unverfied.gif';
+                        } else if (data.status === 'verified') {
+                            progress = 50;
+                            updateSteps(2);
+                            gifUrl = 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcWx1Y2V3b2Z1b3RlZ3B4dG9xYjZ6eGJ5dWZ5dGJtZ2NqZ2VtZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT5LMGupUKCHb7D3u0/giphy.gif';
+                        } else if (data.status === 'in-progress') {
+                            progress = 75;
+                            updateSteps(3);
+                            gifUrl = './logos/pending.gif';
+                        } else if (data.status === 'completed') {
+                            progress = 100;
+                            updateSteps(4);
+                            gifUrl = './logos/email.gif';
+                        }
+
+                        progressBar.style.width = progress + '%';
+                        document.getElementById('statusGifImage').src = gifUrl;
+                        statusGif.style.display = 'block';
+                        trackingResult.style.display = 'block';
+                    })
+                    .catch(error => {
+                        alert(error.message || 'Error tracking petition');
+                    })
+                    .finally(() => {
+                        trackBtn.style.display = 'block';
+                        trackSpinner.style.display = 'none';
+                    });
+            });
+
+            function updateSteps(activeStep) {
+                steps.forEach((step, index) => {
+                    step.classList.remove('active', 'completed');
+                    if (index < activeStep - 1) {
+                        step.classList.add('completed');
+                    } else if (index === activeStep - 1) {
+                        step.classList.add('active');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

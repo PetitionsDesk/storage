@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government Officer Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0d4b6e;
+            --secondary: #0a3a5a;
+            --accent: #1a73e8;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #34a853;
+            --danger: #ea4335;
+            --warning: #f9ab00;
+            --info: #4285f4;
+            --govt-gold: #ffc72c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e6f0f5 0%, #c9e3f0 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            color: var(--dark);
+        }
+
+        .card-container {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: all 0.6s ease;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        .header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-container {
+            padding: 2rem;
+            height: calc(100% - 90px);
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .flip-link {
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--primary);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: #e8f5e9;
+            color: #388e3c;
+            border-left: 4px solid #388e3c;
+        }
+
+        .alert-danger {
+            background-color: #ffebee;
+            color: #d32f2f;
+            border-left: 4px solid #d32f2f;
+        }
+
+        .spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .card-container {
+                height: auto;
+            }
+
+            .card {
+                height: auto;
+                min-height: 500px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card-container">
+        <div class="card" id="card">
+            <!-- Front side - Login -->
+            <div class="card-face card-front">
+                <div class="header">
+                    <h1>Officer Login</h1>
+                    <p>Access the government petition system</p>
+                </div>
+
+                <div class="form-container">
+                    <div class="alert alert-danger" id="errorAlert"></div>
+
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="loginOfficerId">Officer ID</label>
+                            <input type="text" class="form-control" id="loginOfficerId" required
+                                placeholder="Enter your officer ID">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" required
+                                placeholder="Enter your password">
+                        </div>
+
+                        <button type="submit" class="btn btn-block" id="loginBtn">
+                            Login
+                        </button>
+                        <div class="spinner" id="loginSpinner"></div>
+                    </form>
+
+                    <p class="flip-link" onclick="flipCard()">Don't have an account? Sign up</p>
+                </div>
+            </div>
+
+            <!-- Back side - Signup -->
+            <div class="card-face card-back">
+                <div class="header">
+                    <h1>Officer Signup</h1>
+                    <p>Register for government access</p>
+                </div>
+
+                <div class="form-container">
+                    <div class="alert alert-success" id="signupSuccess" style="display: none;"></div>
+                    <div class="alert alert-danger" id="signupError" style="display: none;"></div>
+
+                    <form id="signupForm">
+                        <div class="form-group">
+                            <label for="signupOfficerId">Officer ID</label>
+                            <input type="text" class="form-control" id="signupOfficerId" required
+                                placeholder="Create your officer ID">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="signupPassword">Password</label>
+                            <input type="password" class="form-control" id="signupPassword" required
+                                placeholder="Create a password">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="signupName">Full Name</label>
+                            <input type="text" class="form-control" id="signupName" required
+                                placeholder="Enter your full name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="signupEmail">Email</label>
+                            <input type="email" class="form-control" id="signupEmail" required
+                                placeholder="Enter your official email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="signupDeptId">Department ID</label>
+                            <input type="text" class="form-control" id="signupDeptId" required
+                                placeholder="Enter TN25XXX">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="signupDepartment">Department</label>
+                            <select class="form-control" id="signupDepartment" required>
+                                <option value="">Select Department</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Water Supply">Water Supply</option>
+                                <option value="Electricity">Electricity</option>
+                                <option value="Sanitation">Sanitation</option>
+                                <option value="Health">Health</option>
+                                <option value="Education">Education</option>
+                                <option value="Housing">Housing</option>
+                                <option value="Public Safety">Public Safety</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-block" id="signupBtn">
+                            Register
+                        </button>
+                        <div class="spinner" id="signupSpinner"></div>
+                    </form>
+
+                    <p class="flip-link" onclick="flipCard()">Already have an account? Login</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function flipCard() {
+            document.getElementById('card').classList.toggle('flipped');
+            // Clear forms when flipping
+            document.getElementById('loginForm').reset();
+            document.getElementById('signupForm').reset();
+            document.getElementById('errorAlert').style.display = 'none';
+            document.getElementById('signupSuccess').style.display = 'none';
+            document.getElementById('signupError').style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const errorAlert = document.getElementById('errorAlert');
+            const signupSuccess = document.getElementById('signupSuccess');
+            const signupError = document.getElementById('signupError');
+
+            // Handle login
+            loginForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const officerId = document.getElementById('loginOfficerId').value;
+                const password = document.getElementById('loginPassword').value;
+
+                document.getElementById('loginBtn').style.display = 'none';
+                document.getElementById('loginSpinner').style.display = 'block';
+                errorAlert.style.display = 'none';
+
+                fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        officer_id: officerId,
+                        password: password
+                    }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            throw new Error(data.error);
+                        }
+
+                        // Redirect to department page on successful login
+                        window.location.href = '/department.html';
+                    })
+                    .catch(error => {
+                        errorAlert.textContent = error.message;
+                        errorAlert.style.display = 'block';
+                    })
+                    .finally(() => {
+                        document.getElementById('loginBtn').style.display = 'block';
+                        document.getElementById('loginSpinner').style.display = 'none';
+                    });
+            });
+
+            // Handle signup
+            signupForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const officerId = document.getElementById('signupOfficerId').value;
+                const password = document.getElementById('signupPassword').value;
+                const name = document.getElementById('signupName').value;
+                const email = document.getElementById('signupEmail').value;
+                const deptId = document.getElementById('signupDeptId').value;
+                const department = document.getElementById('signupDepartment').value;
+
+                document.getElementById('signupBtn').style.display = 'none';
+                document.getElementById('signupSpinner').style.display = 'block';
+                signupSuccess.style.display = 'none';
+                signupError.style.display = 'none';
+
+                fetch('/api/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        officer_id: officerId,
+                        password: password,
+                        name: name,
+                        email: email,
+                        department_id: deptId,
+                        department: department
+                    }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            throw new Error(data.error);
+                        }
+
+                        signupSuccess.textContent = data.message;
+                        signupSuccess.style.display = 'block';
+                        signupForm.reset();
+                    })
+                    .catch(error => {
+                        signupError.textContent = error.message;
+                        signupError.style.display = 'block';
+                    })
+                    .finally(() => {
+                        document.getElementById('signupBtn').style.display = 'block';
+                        document.getElementById('signupSpinner').style.display = 'none';
+                    });
+            });
+        });
+    </script>
+</body>
+
+</html>
